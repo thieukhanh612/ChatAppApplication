@@ -19,10 +19,11 @@ import com.hcmute.ChatAppApplication.common.Util;
 import com.hcmute.ChatAppApplication.login.LoginActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
+//declare class for chat service
 public class ChatMessagingService extends FirebaseMessagingService {
 
     @Override
+    //func to update new token
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         Util.updateDeviceTokken(this, s);
@@ -30,6 +31,7 @@ public class ChatMessagingService extends FirebaseMessagingService {
 
 
     @Override
+    //action when received message
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 

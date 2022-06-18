@@ -28,30 +28,37 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-
+//declare fragment for find friend
 public class FindFriendFragment extends Fragment {
-
+    //declare custom progress bar view
     private View customPb;
+    //declare text view for empty
     private TextView emptyFrndtv;
+    //declare view for recycle
     private RecyclerView recyclerView;
+    //declare adapter for find friend
     private FindFriendAdapter adapter;
-
+    //declare firebase authorization
     private FirebaseAuth mAuth;
+    //declare list for friends
     private ArrayList<FindFriendModel> frnds = new ArrayList<>();
+    //declare current firebase user
     private FirebaseUser currentUser;
+    //declare reference of database
     private DatabaseReference mReference,referenceFriendRequest;
 
-
+    //initiate fragment
     public FindFriendFragment() {
         // Required empty public constructor
     }
-
+    //initiate fragment for find friend
     public static FindFriendFragment newInstance(String param1, String param2) {
         FindFriendFragment fragment = new FindFriendFragment();
         return fragment;
     }
 
     @Override
+    //action when create view
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -59,6 +66,7 @@ public class FindFriendFragment extends Fragment {
     }
 
     @Override
+    //action when view created
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -82,8 +90,10 @@ public class FindFriendFragment extends Fragment {
         customPb.setVisibility(View.VISIBLE);
 
         Query query = mReference.orderByChild(NodeNames.NAME);
+        //set event to query value
         query.addValueEventListener(new ValueEventListener() {
             @Override
+            //action when value change
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 frnds.clear();
@@ -97,9 +107,10 @@ public class FindFriendFragment extends Fragment {
 
                             final String name = ds.child(NodeNames.NAME).getValue().toString();
                             final String photo = ds.child(NodeNames.PHOTO).toString();
-
+                            //set event for reference of fr request
                             referenceFriendRequest.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
+                                //action when data change
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(snapshot.exists()){
                                         String requestType = snapshot.child(NodeNames.REQUESTS_TYPE).getValue().toString();
@@ -119,6 +130,7 @@ public class FindFriendFragment extends Fragment {
                                 }
 
                                 @Override
+                                //action when get an error from database
                                 public void onCancelled(@NonNull DatabaseError error) {
                                     customPb.setVisibility(View.GONE);
                                 }
@@ -131,6 +143,7 @@ public class FindFriendFragment extends Fragment {
             }
 
             @Override
+            //action when get an error from database
             public void onCancelled(@NonNull DatabaseError error) {
                 //emptyFrndtv.setVisibility(View.GONE);
                 customPb.setVisibility(View.GONE);

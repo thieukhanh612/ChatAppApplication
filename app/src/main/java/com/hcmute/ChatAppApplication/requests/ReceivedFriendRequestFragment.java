@@ -27,21 +27,27 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+//declare fragment for received fr request
 public class ReceivedFriendRequestFragment extends Fragment {
-
+    //declare view for recycle
     private RecyclerView recyclerView;
+    //declare request adapter
     private RequestAdapter adapter;
+    //declare list for request model
     private ArrayList<RequestModel> frndReqReceivedList;
+    //declare custom progressbar
     private View customPb;
+    //declare text view
     private TextView txtView;
-
+    //declare reference for database
     private DatabaseReference databaseReferenceRequests, databaseReferenceUser;
+    //declare current user
     private FirebaseUser currentUser;
-
+    //initiate fragment
     public ReceivedFriendRequestFragment() {
         // Required empty public constructor
     }
-
+    //initiate fragment
     public static ReceivedFriendRequestFragment newInstance(String param1, String param2) {
         ReceivedFriendRequestFragment fragment = new ReceivedFriendRequestFragment();
 
@@ -49,12 +55,14 @@ public class ReceivedFriendRequestFragment extends Fragment {
     }
 
     @Override
+    //action when create class
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
 
     @Override
+    //action when create view
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -62,6 +70,7 @@ public class ReceivedFriendRequestFragment extends Fragment {
     }
 
     @Override
+    //action when view created
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -83,6 +92,7 @@ public class ReceivedFriendRequestFragment extends Fragment {
 
         databaseReferenceRequests.addValueEventListener(new ValueEventListener() {
             @Override
+            //action when data change
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 txtView.setVisibility(View.GONE);
@@ -98,6 +108,7 @@ public class ReceivedFriendRequestFragment extends Fragment {
 
                             databaseReferenceUser.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
+                                //action when data change
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                     String userName = snapshot.child(NodeNames.NAME).getValue().toString();
@@ -114,6 +125,7 @@ public class ReceivedFriendRequestFragment extends Fragment {
                                 }
 
                                 @Override
+                                //action when get error from database
                                 public void onCancelled(@NonNull DatabaseError error) {
                                     customPb.setVisibility(View.GONE);
                                     Toast.makeText(getActivity(), getActivity().getString(R.string.failed_to_fetch_accep_request,error.getMessage()), Toast.LENGTH_SHORT).show();
@@ -132,6 +144,7 @@ public class ReceivedFriendRequestFragment extends Fragment {
             }
 
             @Override
+            //action when get error from database
             public void onCancelled(@NonNull DatabaseError error) {
 
                 customPb.setVisibility(View.GONE);

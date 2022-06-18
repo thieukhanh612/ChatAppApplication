@@ -32,9 +32,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+//declare class of utilities
 public class Util {
 
-
+    //func to check internet connection
     public static boolean checkInternetConnection(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -43,7 +44,7 @@ public class Util {
         } else return false;
 
     }
-
+    //func to update device token
     public static void updateDeviceTokken(Context context, String token) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -70,7 +71,7 @@ public class Util {
         }
 
     }
-
+    //func to send notification
     public static void sendNotification(final Context context, String message, String tittle, String userId) {
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -148,7 +149,7 @@ public class Util {
 
 
     }
-
+    //func to update chat details
     public static void updateChatDetails(Context context, String currentUserId, String chatUserId,final String lastMessage){
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -195,7 +196,7 @@ public class Util {
         });
 
     }
-
+    //func to get time ago
     public static String getTimeAgo(long time){
         final int SECOND_MILLIS = 1000;
         final int MINUTE_MILLIS = 60*SECOND_MILLIS;

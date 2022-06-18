@@ -25,15 +25,18 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
+//declare main activity
 public class MainActivity extends AppCompatActivity {
 
-
+    //declare tab layout
     private TabLayout tabLayout;
+    //declare view page
     private ViewPager viewPager2;
+    //declare bool for double press back
     private boolean doubleBackPressed = false;
 
     @Override
+    //action when create
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    //func to set view page
     private void setViewPager(){
 
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.chat_layout_tab));
@@ -66,17 +69,20 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
+            //action when click tab
             public void onTabSelected(TabLayout.Tab tab) {
 
                 viewPager2.setCurrentItem(tab.getPosition());
             }
 
             @Override
+            //action when unselected tab
             public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
             @Override
+            //action when reselect tab
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when create menu
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -96,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when option selected
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){

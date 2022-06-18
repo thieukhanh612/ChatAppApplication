@@ -17,13 +17,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+//declare class for reset password
 public class ResetPasswordActivity extends AppCompatActivity {
-
+    //declare button for retry, close, reset
     private Button retryBtn, closeBtn, resetMsgBtn;
+    //declare linear layout for reset and reset message view
     private LinearLayout llresetView, llresetMsgView;
+    //declare text view for email and tvmessage
     private TextView email, tvMessage;
 
     @Override
+    //action when create class
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
@@ -39,17 +43,20 @@ public class ResetPasswordActivity extends AppCompatActivity {
         closeBtn = findViewById(R.id.closeBtn);
         resetMsgBtn = findViewById(R.id.sentResetMsg);
         tvMessage = findViewById(R.id.tvMessage);
-
+        //set event to reset message button
         resetMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click button
             public void onClick(View view) {
                 if(email.getText().toString().equals("")){
                     email.setError(getString(R.string.valid_email));
                 }else{
 
                     FirebaseAuth auth = FirebaseAuth.getInstance();
+                    //set event to send password
                     auth.sendPasswordResetEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
+                        //action when complete send password reset email
                         public void onComplete(@NonNull Task<Void> task) {
                             llresetView.setVisibility(View.GONE);
                             llresetMsgView.setVisibility(View.VISIBLE);
@@ -84,8 +91,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                 tvMessage.setText(getString(R.string.error_in_sent_email, task.getException()));
 
                                 retryBtn.setText(getString(R.string.retry));
+                                //set event to retry button
                                 retryBtn.setOnClickListener(new View.OnClickListener() {
                                     @Override
+                                    //action when click retry button
                                     public void onClick(View view) {
                                         llresetView.setVisibility(View.VISIBLE);
                                         llresetMsgView.setVisibility(View.GONE);
@@ -98,9 +107,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //set event to close button
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click button
             public void onClick(View view) {
                 finish();
             }

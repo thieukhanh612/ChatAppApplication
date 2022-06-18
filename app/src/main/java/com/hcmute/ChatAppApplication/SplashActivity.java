@@ -10,14 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hcmute.ChatAppApplication.login.LoginActivity;
-
+//declare class for splash activity
 public class SplashActivity extends AppCompatActivity {
-
+    //declare image view
     private ImageView ivSplash;
+    //declare for text view
     private TextView tvSplash;
+    //declare animation
     private Animation animation;
 
     @Override
+    //action when create
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
@@ -32,11 +35,13 @@ public class SplashActivity extends AppCompatActivity {
         animation = AnimationUtils.loadAnimation(this, R.anim.splash_animation);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
+            //action when start animation
             public void onAnimationStart(Animation animation) {
 
             }
 
             @Override
+            //action when animation end
             public void onAnimationEnd(Animation animation) {
 
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
@@ -45,6 +50,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
+            //action when repeat animation
             public void onAnimationRepeat(Animation animation) {
 
             }

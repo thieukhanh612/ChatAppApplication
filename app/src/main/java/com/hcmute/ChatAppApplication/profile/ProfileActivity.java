@@ -39,27 +39,35 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
+//declare class for profile activity
 public class ProfileActivity extends AppCompatActivity {
-
+    //declare button for save and logout
     private Button save, logout;
+    //declare text view for email and change password
     private TextView emailView, chngPswrd;
+    //declare edit text for username
     private TextInputEditText edtUsername;
+    //declare image view for user photo
     private CircleImageView edtProfilePic;
+    //declare view for custom progress bar
     private View customProgressbar;
-
+    //defined request code
     public static final int REQUEST_CODE_PERMISSION_GRANTED = 10;
     public static final int REQUEST_CODE_IMAGE_SELECTOR = 1000;
 
-
+    //declare firebase authorization
     FirebaseAuth mAuth;
+    //declare firebase user
     private FirebaseUser currentUser;
+    //declare url for server and local photo
     private Uri serverPhotoUri, localPhotoUri;
-
+    //declare reference for storage
     private StorageReference storageReference;
+    //declare reference for database
     private DatabaseReference reference;
 
     @Override
+    //action when create class
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
@@ -93,9 +101,10 @@ public class ProfileActivity extends AppCompatActivity {
                         .into(edtProfilePic);
 
             }
-
+            //set event on edit profile
             edtProfilePic.setOnClickListener(new View.OnClickListener() {
                 @Override
+                //action when click button
                 public void onClick(View view) {
                     if(serverPhotoUri == null){
                         selectImage();
@@ -123,9 +132,10 @@ public class ProfileActivity extends AppCompatActivity {
                    }
                 }
             });
-
+            //set event on save
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
+                //action when click
                 public void onClick(View view) {
                     if(localPhotoUri!= null){
                         updateNameAndPhoto();
@@ -137,18 +147,20 @@ public class ProfileActivity extends AppCompatActivity {
             });
 
         }
-
+        //set event on logout
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                 finish();
             }
         });
-
+        //set event on change password
         chngPswrd.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click
             public void onClick(View view) {
                 startActivity(new Intent(ProfileActivity.this, ChangePasswordActivity.class));
 
@@ -157,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-
+    //func update name and photo
     private void updateNameAndPhoto(){
 
         String filePath = currentUser.getUid()+".jpg";
@@ -165,8 +177,10 @@ public class ProfileActivity extends AppCompatActivity {
         final StorageReference fileReference = storageReference.child("images/"+filePath);
 
         customProgressbar.setVisibility(View.VISIBLE);
+        //set event on push file to filestorage
         fileReference.putFile(localPhotoUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
+            //action when complete
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if(task.isSuccessful()){
 
@@ -178,9 +192,10 @@ public class ProfileActivity extends AppCompatActivity {
                                     .setDisplayName(edtUsername.getText().toString())
                                     .setPhotoUri(uri)
                                     .build();
-
+                            //set event on update profile
                             currentUser.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
+                                //action when complete
                                 public void onComplete(@NonNull Task<Void> task) {
 
                                     if(task.isSuccessful()){
@@ -216,15 +231,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
+    //func to update username
     private void updateUserName(){
 
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                 .setDisplayName(edtUsername.getText().toString())
                 .build();
-
+        //set event on update profile
         currentUser.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
+            //action when complete update profile
             public void onComplete(@NonNull Task<Void> task) {
 
                 if(task.isSuccessful()){
@@ -252,7 +268,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
-
+    //action when select image
     private void selectImage(){
 
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -262,6 +278,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     @Override
+    //action when get result from request permission
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -276,6 +293,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when get resilt
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -296,16 +314,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     }
-
+    //func to remove picture
     private void removePic(){
 
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                 .setDisplayName(edtUsername.getText().toString())
                 .setPhotoUri(null)
                 .build();
-
+        //set event to update profile
         currentUser.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
+            //action when complete update
             public void onComplete(@NonNull Task<Void> task) {
 
                 if(task.isSuccessful()){

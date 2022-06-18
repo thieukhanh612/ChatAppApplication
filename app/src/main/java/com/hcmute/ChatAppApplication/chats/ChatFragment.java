@@ -30,42 +30,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatFragment extends Fragment {
-
+    //initiate view
     private RecyclerView recyclerView;
+    //initiate chat view
     private TextView emptChatView;
+    //initiate custom view
     private View customPb;
-
+    // declare chat list
     private ArrayList<ChatListModel> chatListModelArrayList;
+    // declare chat list adapter
     private ChatListAdapter adapter;
+    // declare query to get data from database
     private Query query;
+    // declare reference of database
     private DatabaseReference databaseReferenceChats, databaseReferenceUsers;
+    // declare event listener
     private ChildEventListener childEventListener;
+    // declare user list
     private List<String> usersIdList;
 
-
+    // initiate chat fragment constructor
     public ChatFragment() {
         // Required empty public constructor
     }
-
+    // initiate chat fragment constructor
     public static ChatFragment newInstance(String param1, String param2) {
         ChatFragment fragment = new ChatFragment();
 
         return fragment;
     }
-
+    // create chat fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
-
+    // action when create view
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
-
+    // action when view created
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -96,6 +103,7 @@ public class ChatFragment extends Fragment {
         emptChatView.setVisibility(View.VISIBLE);
 
         childEventListener = new ChildEventListener() {
+            // action when child added
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 customPb.setVisibility(View.GONE);
@@ -104,23 +112,23 @@ public class ChatFragment extends Fragment {
 
                 updateList(snapshot,true, snapshot.getKey());
             }
-
+            //action when child changed
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 updateList(snapshot,false, snapshot.getKey());
 
             }
-
+            //action when child removed
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
             }
-
+            //action when child moved
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
-
+            //action when get an error lead to cancel
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -131,13 +139,13 @@ public class ChatFragment extends Fragment {
 
     }
 
-
+    //action when destroy child
     @Override
     public void onDestroy() {
         super.onDestroy();
         query.removeEventListener(childEventListener);
     }
-
+    // dunc to update list chat
     private void updateList(DataSnapshot dataSnapshot, boolean isNew, String userId){
 
         final String lastMessage, lastMessageTime,unreadCount;
@@ -152,6 +160,7 @@ public class ChatFragment extends Fragment {
                 "0": dataSnapshot.child(NodeNames.UNREAD_COUNT).getValue().toString();
 
         databaseReferenceUsers.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            //action when user list change
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String fullname = snapshot.child(NodeNames.NAME).getValue()!=null?
@@ -173,7 +182,7 @@ public class ChatFragment extends Fragment {
                 }
                 adapter.notifyDataSetChanged();
             }
-
+            //action when get an error from database
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

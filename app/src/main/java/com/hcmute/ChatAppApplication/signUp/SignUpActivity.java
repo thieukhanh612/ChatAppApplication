@@ -42,25 +42,37 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+//declare sign up activity
 public class SignUpActivity extends AppCompatActivity {
-
+    //declare request code
     public static final int REQUEST_CODE_PERMISSION_GRANTED = 10;
     public static final int REQUEST_CODE_IMAGE_SELECTOR = 1000;
 
-
+    //declare edit text for email, password, cofirm password, username
     private TextInputEditText email, password, confirmPswd, username;
+    //declare button for sign up
     private Button signUpBtn;
+    //declare textview for login
     private TextView loginUp;
+    //declare image view for user photo
     private CircleImageView profilePicUser;
+    //declare firebase authorization
     private FirebaseAuth mAuth;
+    //declare firebase user
     private FirebaseUser user;
+    //declare firebase database
     private FirebaseDatabase firebaseDatabase;
+    //declare reference of database
     private DatabaseReference reference;
+    //declare bitmap
     private Bitmap bitmap;
+    //declare reference for storage
     private StorageReference storageReference;
+    //declare url for local and server image
     private Uri localImageUri, serverImageUri;
 
     @Override
+    //action when create activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_);
@@ -78,6 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click sign up
             public void onClick(View view) {
                 if(Util.checkInternetConnection(SignUpActivity.this)){
 
@@ -94,6 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                         mAuth.createUserWithEmailAndPassword(email.getText().toString(), confirmPswd.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
+                            //action when complete create user
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
 
@@ -123,6 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         profilePicUser.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click photo user
             public void onClick(View view) {
                 if(ContextCompat.checkSelfPermission(SignUpActivity.this,
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
@@ -138,7 +153,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-
+    //func to update user name
     private void updateUserName(){
 
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
@@ -148,6 +163,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
+            //action when complete update profile
             public void onComplete(@NonNull Task<Void> task) {
 
                 if(task.isSuccessful()){
@@ -175,7 +191,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
     }
-
+    //action when select image
     private void selectImage(){
 
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -183,6 +199,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when get result on request permission
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -197,6 +214,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when get result
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -217,7 +235,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     }
-
+    //func to update name and photo
     private void updateNameAndPhoto(){
 
         String filePath = user.getUid()+".jpg";
@@ -226,11 +244,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         fileReference.putFile(localImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
+            //action when comlete push file to database
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(SignUpActivity.this, getString(R.string.pdofile_pic_update), Toast.LENGTH_SHORT).show();
                     fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
+                        //action when success get url
                         public void onSuccess(Uri uri) {
                                 serverImageUri = uri;
                             UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
@@ -240,6 +260,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
+                                //action when comlete update profile
                                 public void onComplete(@NonNull Task<Void> task) {
 
                                     if(task.isSuccessful()){

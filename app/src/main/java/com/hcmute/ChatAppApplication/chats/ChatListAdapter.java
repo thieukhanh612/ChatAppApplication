@@ -23,11 +23,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {
 
-
+    // declare contex contain fragment
     private Context mContext;
+    //declare list of chat
     private ArrayList<ChatListModel> chatListModelArrayList;
 
-
+    //initiate chat list adapter
     public ChatListAdapter(Context mContext, ArrayList<ChatListModel> chatListModelArrayList) {
         this.mContext = mContext;
         this.chatListModelArrayList = chatListModelArrayList;
@@ -35,6 +36,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     @NonNull
     @Override
+    // action on creating
     public ChatListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.chat_layout, parent, false);
@@ -42,6 +44,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     }
 
     @Override
+    //action on bind position to view
     public void onBindViewHolder(@NonNull ChatListViewHolder holder, int position) {
 
         ChatListModel chatListModel = chatListModelArrayList.get(position);
@@ -99,6 +102,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
         holder.getChatLilnearLayout().setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click chat list item
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MessagingChatActivity.class);
                 intent.putExtra(Constants.USERID_INTENT_KEY, chatListModel.getUserId());
@@ -109,18 +113,20 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         });
 
     }
-
+    //func get chat list count
     @Override
     public int getItemCount() {
         return chatListModelArrayList.size();
     }
-
+    //declare class for chat list view
     class ChatListViewHolder extends RecyclerView.ViewHolder{
-
+        //declare text view for fullname, message, time, state for chat list item
         private TextView fullName,lastMessage,lastSeenTime,unreadCount;
+        //decare custom image vieww for profile picture
         private CircleImageView profilePic;
+        //declare linear for chat list item
         private LinearLayout chatLilnearLayout;
-
+        //initiate chat list view
         public ChatListViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -131,27 +137,27 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
             profilePic = itemView.findViewById(R.id.chatImagePerson);
             chatLilnearLayout = itemView.findViewById(R.id.chatLinearLayout);
         }
-
+        //func to get full name of user
         public TextView getFullName() {
             return fullName;
         }
-
+        //func to get last message between users
         public TextView getLastMessage() {
             return lastMessage;
         }
-
+        //func to get time that friend read message
         public TextView getLastSeenTime() {
             return lastSeenTime;
         }
-
+        //func to get number of message not read
         public TextView getUnreadCount() {
             return unreadCount;
         }
-
+        //func to get profile picture of user
         public CircleImageView getProfilePic() {
             return profilePic;
         }
-
+        //func to get linear layout for chat
         public LinearLayout getChatLilnearLayout() {
             return chatLilnearLayout;
         }

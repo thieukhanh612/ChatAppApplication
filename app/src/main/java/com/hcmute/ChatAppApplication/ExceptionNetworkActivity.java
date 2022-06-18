@@ -16,15 +16,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hcmute.ChatAppApplication.common.Util;
-
+//declare class for network exception
 public class ExceptionNetworkActivity extends AppCompatActivity {
-
+    //declare text view for internet
     private TextView internetTvMsg;
+    //declare progress bar for internet
     private ProgressBar pbImternetMsg;
+    //declare button for retry and cancel connect to internet
     private Button retryInternetConnection, cancelActivity;
     private ConnectivityManager.NetworkCallback networkCallback;
 
     @Override
+    //action when create activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exception_network);
@@ -40,12 +43,14 @@ public class ExceptionNetworkActivity extends AppCompatActivity {
             networkCallback = new ConnectivityManager.NetworkCallback(){
 
                 @Override
+                //action when get the internet
                 public void onAvailable(@NonNull Network network) {
                     super.onAvailable(network);
                     finish();
                 }
 
                 @Override
+                //action when lost the internet
                 public void onLost(@NonNull Network network) {
                     super.onLost(network);
                     internetTvMsg.setText(getString(R.string.no_internet));
@@ -60,6 +65,7 @@ public class ExceptionNetworkActivity extends AppCompatActivity {
 
             retryInternetConnection.setOnClickListener(new View.OnClickListener() {
                 @Override
+                //action when click retry button
                 public void onClick(View view) {
                     pbImternetMsg.setVisibility(View.VISIBLE);
                     if(Util.checkInternetConnection(getApplicationContext())){
@@ -77,8 +83,10 @@ public class ExceptionNetworkActivity extends AppCompatActivity {
                 }
             });
 
+
             cancelActivity.setOnClickListener(new View.OnClickListener() {
                 @Override
+                //action when click cancel button
                 public void onClick(View view) {
                     finishAffinity();
                 }

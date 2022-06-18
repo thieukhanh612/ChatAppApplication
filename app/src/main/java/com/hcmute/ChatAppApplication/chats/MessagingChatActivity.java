@@ -77,32 +77,52 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MessagingChatActivity extends AppCompatActivity {
-
+    //defined page of number of page load message from database
     private static final int REECORD_PER_PAGE = 30;
+    //defined request code for pick image
     private static final int REQUEST_FOR_PICK_IMAGE = 101;
+    //defined request code for capture image
     private static final int REQUEST_FOR_CAPTURE_IMAGE = 102;
+    //defined request code for pick video
     private static final int REQUEST_FOR_PICK_VIDEO = 103;
+    //defined request code for download file
     private static final int REQUEST_FOR_DOWNLOAD_FILE = 104;
+    //declare linear layout for chat
     private LinearLayout llChat, llFileUploadingStatus;
+    //declare edix text view for message
     private EditText entrMsg;
+    //declare image view for send, attach or profile
     private ImageView sendIv, attachIv, ivProfile;
+    //declare text view for user name and status
     private TextView tvUserName, tvUserStatus;
+    //declare firebase authorization
     private FirebaseAuth firebaseAuth;
+    //declare database from firebase
     private FirebaseDatabase rootRefrence;
+    //declare id of user, name, photo name
     private String currentUserId, chatUserId, photoNameUser, userName;
+    //declare view for message
     private RecyclerView recyclerViewMessage;
+    //declare layout of refresh
     private SwipeRefreshLayout swipeRefreshLayout;
+    //declare dialog
     private BottomSheetDialog bottomSheetDialog;
+    //declare group chat
     private ChipGroup smartRepliesCgp;
+    //declare list of message
     private List<TextMessage> conversation;
+    //defined number of page message
     private int countPage = 1;
+    //declare list of message model
     private ArrayList<MessageModel> messagesList;
+    //declare message adapter
     private MessageAdapter messageAdapter;
+    //declare database reference
     private DatabaseReference messageReference;
-
+    //declare listener of event
     private ChildEventListener childEventListener;
 
-
+    //action on create
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,6 +183,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         userSpecificRef.addValueEventListener(new ValueEventListener() {
             @Override
+            //action when data change
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String status = " ";
                 if (snapshot.child(NodeNames.ONLINE).getValue() != null) {
@@ -176,6 +197,7 @@ public class MessagingChatActivity extends AppCompatActivity {
             }
 
             @Override
+            //action when get an error from database
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
@@ -185,6 +207,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
             storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
+                //action when success get message from database
                 public void onSuccess(Uri uri) {
                     Glide.with(MessagingChatActivity.this)
 
@@ -211,15 +234,17 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
+            //action when refresh conversation
             public void onRefresh() {
                 countPage++;
                 loadMessage();
             }
         });
 
-
+        // set event when click send message
         sendIv.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action on click send
             public void onClick(View view) {
 
                 DatabaseReference mRootref = rootRefrence.getReference().child(NodeNames.MESSAGES).child(currentUserId).child(chatUserId).push();
@@ -234,6 +259,7 @@ public class MessagingChatActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.chat_file_share_options, null);        //Setting the view for bottomSheetDialog
         view.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click send file button
             public void onClick(View view) {
 
                 bottomSheetDialog.dismiss();
@@ -245,6 +271,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         view.findViewById(R.id.galleryLL).setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click gallery button
             public void onClick(View view) {
                 bottomSheetDialog.dismiss();
                 Intent imageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -254,6 +281,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         view.findViewById(R.id.videoLL).setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click video
             public void onClick(View view) {
 
                 bottomSheetDialog.dismiss();
@@ -264,15 +292,17 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         view.findViewById(R.id.cancelLL).setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click cancel
             public void onClick(View view) {
                 bottomSheetDialog.dismiss();
             }
         });
 
         bottomSheetDialog.setContentView(view);
-
+        //set event when click attach button
         attachIv.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click attach button
             public void onClick(View view) {
 
                 if (ActivityCompat.checkSelfPermission(MessagingChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -292,19 +322,22 @@ public class MessagingChatActivity extends AppCompatActivity {
 
             }
         });
-
+        //set event of message
         entrMsg.addTextChangedListener(new TextWatcher() {
             @Override
+            //action before text change
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
+            //action when change text
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
+            //action after changing text
             public void afterTextChanged(Editable editable) {
 
                 DatabaseReference currentUserRef = FirebaseDatabase.getInstance().getReference()
@@ -325,6 +358,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
                 chatUserRef.addValueEventListener(new ValueEventListener() {
                     @Override
+                    //action when data change
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.child(NodeNames.TYPING).getValue() != null) {
                             String typingStatus = snapshot.child(NodeNames.TYPING).getValue().toString();
@@ -337,6 +371,7 @@ public class MessagingChatActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    //action when get an error from database
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
@@ -348,7 +383,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
 
     }
-
+    //func send message
     private void sendMessage(String msg, String msgType, String pushId) {
 
         try {
@@ -379,6 +414,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
                 rootRefrence.getReference().updateChildren(messageUserHashMap, new DatabaseReference.CompletionListener() {
                     @Override
+                    //action when complete send message
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                         if (error != null) {
                             Toast.makeText(MessagingChatActivity.this, getString(R.string.message_sent_failed, error.getMessage()), Toast.LENGTH_SHORT).show();
@@ -401,7 +437,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
     }
 
-
+    //func load message from database
     private void loadMessage() {
 
         messagesList.clear();
@@ -418,6 +454,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         childEventListener = new ChildEventListener() {
             @Override
+            //action when send message
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
                 MessageModel messageModel = snapshot.getValue(MessageModel.class);
@@ -432,22 +469,26 @@ public class MessagingChatActivity extends AppCompatActivity {
             }
 
             @Override
+            //action when change message
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
 
             @Override
+            //action when remove message
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 loadMessage();
 
             }
 
             @Override
+            //action when move message
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
 
             @Override
+            //action when get error from database
             public void onCancelled(@NonNull DatabaseError error) {
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -458,6 +499,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
 
     @Override
+    //action when request server
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -477,6 +519,7 @@ public class MessagingChatActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when receive result
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -503,6 +546,7 @@ public class MessagingChatActivity extends AppCompatActivity {
     }
 
     @Override
+    //action when click menu item
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
@@ -515,7 +559,7 @@ public class MessagingChatActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    //func to upload file to server
     private void uploadFileToServer(Uri uri, String messageType) {
 
         DatabaseReference reference = rootRefrence.getReference().child(NodeNames.MESSAGES).child(currentUserId).child(chatUserId).push();
@@ -528,7 +572,7 @@ public class MessagingChatActivity extends AppCompatActivity {
         UploadTask uploadTask = mReference.putFile(uri);
         uploadProgress(uploadTask, mReference, pushId, messageType);
     }
-
+    //func to upload bytes of file
     private void uploadBytes(ByteArrayOutputStream byteArrayOutputStream, String messageType) {
 
         DatabaseReference reference = rootRefrence.getReference().child(NodeNames.MESSAGES).child(currentUserId).child(chatUserId).push();
@@ -543,7 +587,7 @@ public class MessagingChatActivity extends AppCompatActivity {
         uploadProgress(uploadTask, mReference, pushId, messageType);
 
     }
-
+    //func to get upload progress
     private void uploadProgress(final UploadTask uploadTask, StorageReference storageReferencePath, String pushId, String messageType) {
 
         View view = getLayoutInflater().inflate(R.layout.file_upload_status, null);
@@ -553,26 +597,30 @@ public class MessagingChatActivity extends AppCompatActivity {
         ImageView ivResume = view.findViewById(R.id.ivResume);
         ImageView ivCancel = view.findViewById(R.id.ivCancelDownloadOrUpload);
         llFileUploadingStatus.addView(view);
+        //set event to pause button
         ivPause.setOnClickListener(new View.OnClickListener() {
             @Override
+            //func when click pause
             public void onClick(View view) {
                 uploadTask.pause();
                 ivResume.setVisibility(View.VISIBLE);
                 ivPause.setVisibility(View.GONE);
             }
         });
-
+        //set event to resume button
         ivResume.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click resume button
             public void onClick(View view) {
                 uploadTask.resume();
                 ivResume.setVisibility(View.GONE);
                 ivPause.setVisibility(View.VISIBLE);
             }
         });
-
+        //set event on cancel button
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click cancel
             public void onClick(View view) {
                 uploadTask.cancel();
             }
@@ -580,9 +628,10 @@ public class MessagingChatActivity extends AppCompatActivity {
 
 
         uploadTittleTv.setText(getString(R.string.uploadStatus, messageType, "0"));
-
+        //set when in progress upload
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
+            //action when in progress
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
 
                 double progressCount = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
@@ -592,9 +641,10 @@ public class MessagingChatActivity extends AppCompatActivity {
 
             }
         });
-
+        //set event on upload task when complete
         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
+            //action when complete upload
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 llFileUploadingStatus.removeView(view);
                 if (task.isSuccessful()) {
@@ -608,9 +658,10 @@ public class MessagingChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //set event on upload task when fail
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
+            //action when fail to upload
             public void onFailure(@NonNull Exception e) {
                 llFileUploadingStatus.removeView(view);
                 Toast.makeText(MessagingChatActivity.this, getString(R.string.failed_to_upload, e.getMessage()), Toast.LENGTH_SHORT).show();
@@ -618,17 +669,21 @@ public class MessagingChatActivity extends AppCompatActivity {
         });
 
     }
-
+    //func to delete message
     public void deleteMessage(String messageId, String messageType) {
 
         DatabaseReference ref = rootRefrence.getReference().child(NodeNames.MESSAGES).child(currentUserId).child(chatUserId).child(messageId);
+        //set event on remove message
         ref.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
+            //action when complete remove message
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     DatabaseReference chatref = rootRefrence.getReference().child(NodeNames.MESSAGES).child(chatUserId).child(currentUserId).child(messageId);
+                   //set event when remove message on database
                     chatref.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
+                        //action when remove message on database
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
 
@@ -639,8 +694,10 @@ public class MessagingChatActivity extends AppCompatActivity {
 
                                     String fileName = messageType.equals(Constants.MESSAGE_TYPE_VIDEO) ? messageId + ".mp4" :
                                             messageId + ".jpg";
+                                    //set event when remove file in database
                                     storageReference.child(folder).child(fileName).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
+                                        //action when complete remove file on database
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (!task.isSuccessful()) {
                                                 Toast.makeText(MessagingChatActivity.this, getString(R.string.failed_to_delete, task.getException()), Toast.LENGTH_SHORT).show();
@@ -663,7 +720,7 @@ public class MessagingChatActivity extends AppCompatActivity {
         });
 
     }
-
+    //func to download file from database
     public void downloadFile(String messageId, String messageType, boolean isShared) {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
@@ -683,9 +740,10 @@ public class MessagingChatActivity extends AppCompatActivity {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(folder).child(fileName);
             File localFile = new File(localFilePath);
 
-
+            //set event when get url from database
             storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
+                //action when success get url from database
                 public void onSuccess(Uri uri) {
                     try {
                         if (localFile.exists() || localFile.createNewFile()) {
@@ -700,26 +758,30 @@ public class MessagingChatActivity extends AppCompatActivity {
                             ImageView ivCancel = view.findViewById(R.id.ivCancelDownloadOrUpload);
 
                             llFileUploadingStatus.addView(view);
+                            //set event to pause button
                             ivPause.setOnClickListener(new View.OnClickListener() {
                                 @Override
+                                //action when click pause
                                 public void onClick(View view) {
                                     downloadTask.pause();
                                     ivResume.setVisibility(View.VISIBLE);
                                     ivPause.setVisibility(View.GONE);
                                 }
                             });
-
+                            //set event to resume button
                             ivResume.setOnClickListener(new View.OnClickListener() {
                                 @Override
+                                //action when click resume
                                 public void onClick(View view) {
                                     downloadTask.resume();
                                     ivResume.setVisibility(View.GONE);
                                     ivPause.setVisibility(View.VISIBLE);
                                 }
                             });
-
+                            //set event to cancel button
                             ivCancel.setOnClickListener(new View.OnClickListener() {
                                 @Override
+                                //action when click cancel
                                 public void onClick(View view) {
                                     downloadTask.cancel();
                                     llFileUploadingStatus.removeView(view);
@@ -727,9 +789,10 @@ public class MessagingChatActivity extends AppCompatActivity {
                             });
 
                             uploadTittleTv.setText(getString(R.string.downloadStatus, messageType, "0"));
-
+                            //set event on download task
                             downloadTask.addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
+                                //action when in progress download
                                 public void onProgress(@NonNull FileDownloadTask.TaskSnapshot snapshot) {
                                     double progressCount = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
 
@@ -737,14 +800,17 @@ public class MessagingChatActivity extends AppCompatActivity {
                                     uploadTittleTv.setText(getString(R.string.downloadStatus, messageType, String.valueOf(progressBar.getProgress())));
                                 }
                             });
-
+                            //set event when complete download task
                             downloadTask.addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
+                                //action when complete
                                 public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
                                     llFileUploadingStatus.removeView(view);
                                     if (task.isSuccessful()) {
+                                        //set event on suceesful get download url from storage
                                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
+                                            //action when success get url from storage
                                             public void onSuccess(Uri uri) {
 
                                                 if (isShared) {
@@ -760,8 +826,10 @@ public class MessagingChatActivity extends AppCompatActivity {
                                                 } else {
                                                     Snackbar snackbar = Snackbar.make(llFileUploadingStatus, getString(R.string.downloaded_succesfully),
                                                             Snackbar.LENGTH_INDEFINITE);
+                                                    //set event to snackbar
                                                     snackbar.setAction(R.string.view, new View.OnClickListener() {
                                                         @Override
+                                                        //action when click snackbar
                                                         public void onClick(View view) {
                                                             Uri uri = Uri.parse(localFilePath);
                                                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -780,9 +848,10 @@ public class MessagingChatActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
+                            //set event on fail to download task
                             downloadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
+                                //action when fail
                                 public void onFailure(@NonNull Exception e) {
                                     llFileUploadingStatus.removeView(view);
                                     Toast.makeText(MessagingChatActivity.this, getString(R.string.failed_to_download, e.getMessage()), Toast.LENGTH_SHORT)
@@ -800,11 +869,12 @@ public class MessagingChatActivity extends AppCompatActivity {
     }
 
     @Override
+    //action on click back
     public void onBackPressed() {
         rootRefrence.getReference().child(NodeNames.CHAT).child(currentUserId).child(chatUserId).child(NodeNames.UNREAD_COUNT).setValue("0");
         super.onBackPressed();
     }
-
+    //func to show smart reply
     private void showSmartReply(MessageModel messageModel) {
 
         conversation.clear();
@@ -814,8 +884,10 @@ public class MessagingChatActivity extends AppCompatActivity {
                 .child(NodeNames.MESSAGES).child(currentUserId).child(chatUserId);
 
         Query lastMessageQuery = databaseReference.orderByKey().limitToLast(1);
+        //set event when last message change
         lastMessageQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
+            //action when message change
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot data: snapshot.getChildren()){
                     MessageModel message = data.getValue(MessageModel.class);
@@ -825,8 +897,10 @@ public class MessagingChatActivity extends AppCompatActivity {
                         conversation.add(TextMessage.createForRemoteUser(message.getMessage(),System.currentTimeMillis(),chatUserId));
                         if(!conversation.isEmpty()){
                             SmartReplyGenerator smartReply = SmartReply.getClient();
+                            //set event when success suggest replies
                             smartReply.suggestReplies(conversation).addOnSuccessListener(new OnSuccessListener<SmartReplySuggestionResult>() {
                                 @Override
+                                //action when success suggest replies
                                 public void onSuccess(SmartReplySuggestionResult smartReplySuggestionResult) {
 
                                     if(smartReplySuggestionResult.getStatus()==SmartReplySuggestionResult.STATUS_SUCCESS){
@@ -870,6 +944,7 @@ public class MessagingChatActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
+                                //action when fail to suggest
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
@@ -882,6 +957,7 @@ public class MessagingChatActivity extends AppCompatActivity {
             }
 
             @Override
+            //action when get error from database
             public void onCancelled(@NonNull DatabaseError error) {
 
             }

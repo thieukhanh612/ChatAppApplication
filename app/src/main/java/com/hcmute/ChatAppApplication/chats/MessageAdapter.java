@@ -27,15 +27,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+//declare message adapter
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewholder> {
-
+    //declare context to contain view
     private Context context;
+    //declare array of message model
     private ArrayList<MessageModel> messageModelArrayList;
+    //declare firebase authorization key
     private FirebaseAuth mAuth;
+    //declare mode of action
     private ActionMode actionMode;
+    //declare constraint layout of view
     private ConstraintLayout selectedView;
-
+    //initiate message adapter
     public MessageAdapter(Context context, ArrayList<MessageModel> messageModelArrayList) {
         this.context = context;
         this.messageModelArrayList = messageModelArrayList;
@@ -43,6 +47,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @NonNull
     @Override
+    //action on creating view
     public MessageViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.message_layout,parent,false);
@@ -50,6 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     @Override
+    //action on bind view to position
     public void onBindViewHolder(@NonNull MessageViewholder holder, int position) {
 
         MessageModel messageModel = messageModelArrayList.get(position);
@@ -119,6 +125,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         holder.getConstraintLayout().setOnClickListener(new View.OnClickListener() {
             @Override
+            //action on click message
             public void onClick(View view) {
                 String messageType = view.getTag(R.id.TAG_MESSAGE_TYPE).toString();
                 Uri uri = Uri.parse( view.getTag(R.id.TAG_MESSAGE).toString());
@@ -140,6 +147,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         holder.getConstraintLayout().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
+            //action when hold long the message
             public boolean onLongClick(View view) {
                 if(actionMode!= null){
                     return false;
@@ -154,19 +162,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         });
 
     }
-
+    //action get number of message
     @Override
     public int getItemCount() {
         return messageModelArrayList.size();
     }
-
+    //declare view holder for message
     class MessageViewholder extends RecyclerView.ViewHolder{
-
+        //declare text view for component of message
         private TextView textViewMsgSent,textViewMsgReceived,textViewMsgSentTime,textViewMsgReceivedTime,textViewImagSentTime,textViewImageReceivedTime;
+        //declare layout for view
         private LinearLayout sendMsgLL, receivedMsgLL,sendMessageImageLL,receivedMessageImageLL;
+        //declare image view for send and get image
         private ImageView sentImageIv,receivedImageIv;
+        //declare constraint of layout
         private ConstraintLayout constraintLayout;
-
+        //initiate message view holder
         public MessageViewholder(@NonNull View itemView) {
             super(itemView);
 
@@ -186,60 +197,60 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             receivedMessageImageLL = itemView.findViewById(R.id.receivedMessageImageLL);
             constraintLayout = itemView.findViewById(R.id.sentMessageCNl);
         }
-
+        //func to get text view of message sent
         public TextView getTextViewMsgSent() {
             return textViewMsgSent;
         }
-
+        //func to get text view of message received
         public TextView getTextViewMsgReceived() {
             return textViewMsgReceived;
         }
-
+        //func to get textview of message sent
         public TextView getTextViewMsgSentTime() {
             return textViewMsgSentTime;
         }
-
+        //func to get text view for time of message received
         public TextView getTextViewMsgReceivedTime() {
             return textViewMsgReceivedTime;
         }
-
+        //func go get linear layout of send message
         public LinearLayout getSendMsgLL() {
             return sendMsgLL;
         }
-
+        //func go get linear layout of received message
         public LinearLayout getReceivedMsgLL() {
             return receivedMsgLL;
         }
-
+        //func to get constraint of layout
         public ConstraintLayout getConstraintLayout() {
             return constraintLayout;
         }
-
+        //func to get text view of time sent message
         public TextView getTextViewImagSentTime() {
             return textViewImagSentTime;
         }
-
+        //func to get text view of time received message
         public TextView getTextViewImageReceivedTime() {
             return textViewImageReceivedTime;
         }
-
+        //func to get linear layout of send message
         public LinearLayout getSendMessageImageLL() {
             return sendMessageImageLL;
         }
-
+        //func to get linear layout of received message
         public LinearLayout getReceivedMessageImageLL() {
             return receivedMessageImageLL;
         }
-
+        //func to get image view sent
         public ImageView getSentImageIv() {
             return sentImageIv;
         }
-
+        //func to get image view received
         public ImageView getReceivedImageIv() {
             return receivedImageIv;
         }
     }
-
+    //action when action mode = call back()
     public ActionMode.Callback callback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
@@ -255,12 +266,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
             return true;
         }
-
+        //action prepare for action mode
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             return false;
         }
-
+        //action when item clicked
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
 
@@ -310,7 +321,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
             return false;
         }
-
+        //action when dimiss mode
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
 

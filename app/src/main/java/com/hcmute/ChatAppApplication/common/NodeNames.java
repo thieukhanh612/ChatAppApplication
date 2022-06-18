@@ -1,5 +1,6 @@
 package com.hcmute.ChatAppApplication.common;
 
+//declare constant for all name of node in this project
 public class NodeNames {
 
     public static final String USERS = "Users";

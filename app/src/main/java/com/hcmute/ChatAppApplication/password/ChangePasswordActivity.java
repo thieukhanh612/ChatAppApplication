@@ -18,12 +18,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+//declare class for change password activity
 public class ChangePasswordActivity extends AppCompatActivity {
-
+    //declare edit text for change password and comfirm change
     private TextInputEditText chngPswdedt, confChngPswdedt;
+    //declare button for change password
     private Button chngPswd;
 
     @Override
+    //action when create class
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
@@ -37,8 +40,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         chngPswd = findViewById(R.id.changePasswordBtn);
 
+        //set event on change password button
         chngPswd.setOnClickListener(new View.OnClickListener() {
             @Override
+            //action when click button
             public void onClick(View view) {
                 if(chngPswdedt.getText().toString().trim().equals("") ){
 
@@ -56,8 +61,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     FirebaseUser user = auth.getCurrentUser();
 
                     if(user != null){
+                        //set event to update password
                         user.updatePassword(confChngPswdedt.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
+                            //action when complete update password
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     Toast.makeText(ChangePasswordActivity.this, getString(R.string.updt_pswd), Toast.LENGTH_SHORT).show();
